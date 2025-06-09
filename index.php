@@ -2,8 +2,11 @@
 
 
 <?php
-// $sales = all('sales');
+// $sales = all('sales', "where quantity >= 2");
 // dd($sales);
+
+del('items', 5);
+
 // $items = all('items');
 // dd($items);
 // $salesquantity = all('sales', "where quantity >= 2");
@@ -24,13 +27,13 @@
 // dd($row);
 // $update1 = update("items", $row);
 
-$data = [
-    // 'id' => 9,
-    'name' => '青醬雞肉可頌',
-    'cost' => 50,
-    'stock' => 500,
-    'price' => 65
-];
-save('items', $data);
+// $data = [
+//     // 'id' => 9,
+//     'name' => '青醬雞肉可頌',
+//     'cost' => 50,
+//     'stock' => 500,
+//     'price' => 65
+// ];
+// save('items', $data);
 ?>
 
