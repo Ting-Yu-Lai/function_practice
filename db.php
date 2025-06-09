@@ -3,10 +3,20 @@ $dsn = "mysql:host=localhost; dbname=store; charset=utf8";
 $pdo = new PDO($dsn, 'root', '');
 
 
-function all($table, $WHERE = null)
+function all($table, $array=null, $str=null)
 {
     global $pdo;
-    $sql = "SELECT * FROM $table $WHERE";
+    $sql = "SELECT * FROM $table ";
+
+    if(is_array($array)) {
+        $tmp = array2sql($array);
+        $sql = $sql ." WHERE ".join(" AND ",$tmp);
+    } else {
+        $sql .= $array;
+    }
+
+    $sql .= $str;
+
     $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     return $rows;
 }
@@ -24,10 +34,9 @@ function find($table, $id)
     global $pdo;
 
     if (is_array($id)) {
-        $tmp = [];
-        foreach ($id as $key => $value) {
-            $tmp[] = "`$key`='$value'";
-        }
+
+        $tmp = array2sql($id);
+
         $sql = "SELECT * FROM $table WHERE " . join(" AND ", $tmp);
     } else {
         $sql = "SELECT * FROM $table WHERE id='$id'";
@@ -47,18 +56,13 @@ function q($sql)
 function update($table, $data)
 {
     global $pdo;
-
-    $tmp = [];
-    foreach ($data as $key => $value) {
-        if($key != 'id') {
-            $tmp[] = "`$key`='$value'";
-        }
-    }
+    $tmp = array2sql($data);
+ 
     print_r($tmp);
 
     $sql = "UPDATE $table SET " . join(" , ",$tmp) . "
                         WHERE id='{$data['id']}'";
-                        
+
     echo $sql;
     return $pdo->exec($sql);
 }
@@ -80,3 +84,11 @@ function save($table, $data) {
         insert($table, $data);
     }
 }
+
+function array2sql($array) {
+        $tmp=[];
+        foreach ($array as $key => $value) {
+            $tmp[] = "`$key`='$value'";
+        }
+        return $tmp;
+    }
